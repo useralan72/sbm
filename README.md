@@ -34,15 +34,15 @@ NOTE: if during your implementation you'll find that something could be designed
 ways, just implement the one which seems most reasonable to you and if you could provide a short (once
 sentence) reasoning why you choose this way and not another one, it would be great
 
-#To build 
+# To build 
 
 mvn clean install
 
-#Usage
+# Usage
 
 See LiveOrderBoardService
 
-#Design and implementation:
+# Design and implementation:
 
 Used interface to define contract
 Domain objects are immutable
