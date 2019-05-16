@@ -22,7 +22,6 @@ public class MapLiveOrderBoardServiceTest {
     @Before
     public void setUp() {
         liveOrderBoardService = new MapLiveOrderBoardService();
-
     }
 
     @Test
@@ -31,8 +30,8 @@ public class MapLiveOrderBoardServiceTest {
 
         Order registeredOrder = liveOrderBoardService.registerOrder(order);
 
-        assertNotNull(registeredOrder);
-        assertTrue(order.getOrderId().equals(registeredOrder.getOrderId()));
+        assertNull(registeredOrder);
+
     }
 
     @Test
@@ -50,14 +49,7 @@ public class MapLiveOrderBoardServiceTest {
 
     @Test
     public void givenLiveOrdersSummaryForSELLIsAsExpected() {
-        Order order1 = new Order(1l, Order.OrderType.SELL, 306.0, 3.5);
-        Order order2 = new Order(23l, Order.OrderType.SELL, 310.0, 1.2);
-        Order order3 = new Order(99l, Order.OrderType.SELL, 307.0, 1.5);
-        Order order4 = new Order(10000l, Order.OrderType.SELL, 306.0, 2.0);
-        liveOrderBoardService.registerOrder(order1);
-        liveOrderBoardService.registerOrder(order2);
-        liveOrderBoardService.registerOrder(order3);
-        liveOrderBoardService.registerOrder(order4);
+        registerSellOrders();
         List<Order> orders = liveOrderBoardService.findAllOrders();
         assertEquals(4, orders.size());
 
@@ -71,6 +63,51 @@ public class MapLiveOrderBoardServiceTest {
 
     @Test
     public void givenLiveOrdersSummaryForBUYIsAsExpected() {
+        registerBuyOrders();
+        List<Order> orders = liveOrderBoardService.findAllOrders();
+        assertEquals(8, orders.size());
+
+        Comparator<Summary> comparator = Comparator.comparing(Summary::getPrice).reversed();
+        List<Summary> summaryList = liveOrderBoardService.boardSummary(Order.OrderType.BUY, comparator);
+        assertNotNull(summaryList);
+        summaryList.stream().forEach(s -> LOGGER.info(s.toString()));
+        assertEquals(310.0, summaryList.stream().findFirst().get().getPrice(), 0);
+        assertEquals(10.2, summaryList.stream().findFirst().get().getQuantity(), 0);
+    }
+
+    @Test
+    public void givenLiveOrdersSummaryIsAsExpected() {
+        registerSellOrders();
+        registerBuyOrders();
+        List<Order> orders = liveOrderBoardService.findAllOrders();
+        assertEquals(12, orders.size());
+
+        List<Summary> summaryList = liveOrderBoardService.boardSummary();
+        assertNotNull(summaryList);
+        summaryList.stream().forEach(s -> LOGGER.info(s.toString()));
+        assertEquals(306.0, summaryList.stream().findFirst().get().getPrice(), 0);
+        assertEquals(5.5, summaryList.stream().findFirst().get().getQuantity(), 0);
+    }
+
+    private Order createOrder() {
+        long USER_ID = 1l;
+        double QUANTITY = 20.0;
+        double PRICE_PER_KILO = 300.0;
+        return new Order(USER_ID, Order.OrderType.SELL, PRICE_PER_KILO, QUANTITY);
+    }
+
+    private void registerSellOrders() {
+        Order order1 = new Order(1l, Order.OrderType.SELL, 306.0, 3.5);
+        Order order2 = new Order(23l, Order.OrderType.SELL, 310.0, 1.2);
+        Order order3 = new Order(99l, Order.OrderType.SELL, 307.0, 1.5);
+        Order order4 = new Order(10000l, Order.OrderType.SELL, 306.0, 2.0);
+        liveOrderBoardService.registerOrder(order1);
+        liveOrderBoardService.registerOrder(order2);
+        liveOrderBoardService.registerOrder(order3);
+        liveOrderBoardService.registerOrder(order4);
+    }
+
+    private void registerBuyOrders() {
         Order order1 = new Order(1l, Order.OrderType.BUY, 306.0, 3.5);
         Order order2 = new Order(23l, Order.OrderType.BUY, 310.0, 1.2);
         Order order3 = new Order(99l, Order.OrderType.BUY, 307.0, 1.5);
@@ -87,23 +124,5 @@ public class MapLiveOrderBoardServiceTest {
         liveOrderBoardService.registerOrder(order6);
         liveOrderBoardService.registerOrder(order7);
         liveOrderBoardService.registerOrder(order8);
-        List<Order> orders = liveOrderBoardService.findAllOrders();
-        assertEquals(8, orders.size());
-
-        Comparator<Summary> comparator = Comparator.comparing(Summary::getPrice).reversed();
-        List<Summary> summaryList = liveOrderBoardService.boardSummary(Order.OrderType.BUY, comparator);
-        assertNotNull(summaryList);
-        summaryList.stream().forEach(s -> LOGGER.info(s.toString()));
-        assertEquals(310.0, summaryList.stream().findFirst().get().getPrice(), 0);
-        assertEquals(10.2, summaryList.stream().findFirst().get().getQuantity(), 0);
     }
-
-
-    private Order createOrder() {
-        long USER_ID = 1l;
-        double QUANTITY = 20.0;
-        double PRICE_PER_KILO = 300.0;
-        return new Order(USER_ID, Order.OrderType.SELL, PRICE_PER_KILO, QUANTITY);
-    }
-
 }

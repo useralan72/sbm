@@ -11,14 +11,14 @@ public interface LiveOrderBoardService {
     /**
      * Register an Order on the Live Order Board
      * @param order
-     * @return
+     * @return Order
      */
     Order registerOrder(Order order);
 
     /**
      * Cancel an Order
      * @param order
-     * @return
+     * @return t
      */
     Boolean cancelOrder(Order order);
 
@@ -28,7 +28,17 @@ public interface LiveOrderBoardService {
      */
     List<Order> findAllOrders();
 
-    List<Summary> boardSummary(Order.OrderType orderType, Comparator<Summary> comparator);
-
+    /**
+     * Summary of the full board
+     * @return
+     */
     List<Summary> boardSummary();
+
+    /**
+     * Summary of the board
+     * @param orderType
+     * @param comparator
+     * @return
+     */
+    List<Summary> boardSummary(Order.OrderType orderType, Comparator<Summary> comparator);
 }
