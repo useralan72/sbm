@@ -1,11 +1,13 @@
 package com.sbm.lob.model;
 
+import java.math.BigDecimal;
+
 public class Summary {
     private final Order.OrderType type;
-    private final double price;
+    private final BigDecimal price;
     private final double quantity;
 
-    public Summary(Order.OrderType type, double price, double quantity) {
+    public Summary(Order.OrderType type, BigDecimal price, double quantity) {
         this.type = type;
         this.price = price;
         this.quantity = quantity;
@@ -15,7 +17,7 @@ public class Summary {
         return type;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

@@ -1,5 +1,6 @@
 package com.sbm.lob.model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Order {
@@ -8,10 +9,10 @@ public class Order {
     private final UUID orderId;
     private final long userId;
     private final OrderType type;
-    private final double pricePerKilo;
+    private final BigDecimal pricePerKilo;
     private final double quantity;
 
-    public Order(long userId, OrderType type, double pricePerKilo, double quantity) {
+    public Order(long userId, OrderType type, BigDecimal pricePerKilo, double quantity) {
         this.orderId = UUID.randomUUID();
         this.userId = userId;
         this.type = type;
@@ -31,7 +32,7 @@ public class Order {
         return type;
     }
 
-    public double getPricePerKilo() {
+    public BigDecimal getPricePerKilo() {
         return pricePerKilo;
     }
 
